@@ -23,7 +23,6 @@ package com.github.packageurl;
 
 import static java.util.Objects.requireNonNull;
 
-import com.github.packageurl.internal.StringUtil;
 import java.io.Serializable;
 import java.net.URI;
 import java.net.URISyntaxException;
@@ -35,20 +34,31 @@ import java.util.Set;
 import java.util.TreeMap;
 import java.util.function.IntPredicate;
 import java.util.stream.Collectors;
+
 import org.jspecify.annotations.Nullable;
 
+import com.github.packageurl.internal.StringUtil;
+
 /**
- * <p>Package-URL (aka purl) is a "mostly universal" URL to describe a package. A purl is a URL composed of seven components:</p>
+ * <p>
+ * Package-URL (aka purl) is a "mostly universal" URL to describe a package. A
+ * purl is a URL composed of seven components:
+ * </p>
+ *
  * <pre>
  * scheme:type/namespace/name@version?qualifiers#subpath
  * </pre>
  * <p>
  * Components are separated by a specific character for unambiguous parsing.
- * A purl must NOT contain a URL Authority, i.e., there is no support for username,
+ * A purl must NOT contain a URL Authority, i.e., there is no support for
+ * username,
  * password, host and port components. A namespace segment may sometimes look
  * like a host, but its interpretation is specific to a type.
  * </p>
- * <p>SPEC: <a href="https://github.com/package-url/purl-spec">https://github.com/package-url/purl-spec</a></p>
+ * <p>
+ * SPEC: <a href=
+ * "https://github.com/package-url/purl-spec">https://github.com/package-url/purl-spec</a>
+ * </p>
  *
  * @author Steve Springett
  * @since 1.0.0
@@ -62,18 +72,21 @@ public final class PackageURL implements Serializable {
     public static final String SCHEME = "pkg";
 
     /**
-     * The PackageURL scheme ({@code "pkg"}) constant followed by a colon ({@code ':'}).
+     * The PackageURL scheme ({@code "pkg"}) constant followed by a colon
+     * ({@code ':'}).
      */
     private static final String SCHEME_PART = SCHEME + ':';
 
     /**
-     * The package "type" or package "protocol" such as maven, npm, nuget, gem, pypi, etc.
+     * The package "type" or package "protocol" such as maven, npm, nuget, gem,
+     * pypi, etc.
      * Required.
      */
     private final String type;
 
     /**
-     * The name prefix such as a Maven groupid, a Docker image owner, a GitHub user or organization.
+     * The name prefix such as a Maven groupid, a Docker image owner, a GitHub user
+     * or organization.
      * Optional and type-specific.
      */
     private final @Nullable String namespace;
@@ -91,7 +104,8 @@ public final class PackageURL implements Serializable {
     private final @Nullable String version;
 
     /**
-     * Extra qualifying data for a package such as an OS, architecture, a distro, etc.
+     * Extra qualifying data for a package such as an OS, architecture, a distro,
+     * etc.
      * Optional and type-specific.
      */
     private final @Nullable Map<String, String> qualifiers;
@@ -107,7 +121,7 @@ public final class PackageURL implements Serializable {
      *
      * @param purl a valid package URL string to parse
      * @throws MalformedPackageURLException if parsing fails
-     * @throws NullPointerException if {@code purl} is {@code null}
+     * @throws NullPointerException         if {@code purl} is {@code null}
      */
     public PackageURL(final String purl) throws MalformedPackageURLException {
         requireNonNull(purl, "purl");
@@ -133,7 +147,8 @@ public final class PackageURL implements Serializable {
 
             validateScheme(uri.getScheme());
 
-            // Check to ensure that none of these parts are parsed. If so, it's an invalid purl.
+            // Check to ensure that none of these parts are parsed. If so, it's an invalid
+            // purl.
             if (uri.getRawAuthority() != null) {
                 throw new MalformedPackageURLException("Invalid purl: A purl must NOT contain a URL Authority ");
             }
@@ -211,14 +226,15 @@ public final class PackageURL implements Serializable {
     /**
      * Constructs a new PackageURL object.
      *
-     * @param type the type of package (i.e. maven, npm, gem, etc)
-     * @param namespace the name prefix (i.e., group, owner, organization)
-     * @param name the name of the package
-     * @param version the version of the package
+     * @param type       the type of package (i.e. maven, npm, gem, etc)
+     * @param namespace  the name prefix (i.e., group, owner, organization)
+     * @param name       the name of the package
+     * @param version    the version of the package
      * @param qualifiers an array of key/value pair qualifiers
-     * @param subpath the subpath string
+     * @param subpath    the subpath string
      * @throws MalformedPackageURLException if parsing fails
-     * @throws NullPointerException if {@code type} or {@code name} are {@code null}
+     * @throws NullPointerException         if {@code type} or {@code name} are
+     *                                      {@code null}
      * @since 2.0.0
      */
     public PackageURL(
@@ -243,7 +259,8 @@ public final class PackageURL implements Serializable {
      *
      * @return the builder
      * @since 1.5.0
-     * @deprecated use {@link PackageURLBuilder#aPackageURL(PackageURL)} or {@link PackageURLBuilder#aPackageURL(String)}
+     * @deprecated use {@link PackageURLBuilder#aPackageURL(PackageURL)} or
+     *             {@link PackageURLBuilder#aPackageURL(String)}
      */
     @Deprecated
     public PackageURLBuilder toBuilder() {
@@ -260,7 +277,8 @@ public final class PackageURL implements Serializable {
     }
 
     /**
-     * Returns the package "type" or package "protocol" such as maven, npm, nuget, gem, pypi, etc.
+     * Returns the package "type" or package "protocol" such as maven, npm, nuget,
+     * gem, pypi, etc.
      *
      * @return the type
      */
@@ -269,7 +287,8 @@ public final class PackageURL implements Serializable {
     }
 
     /**
-     * Returns the name prefix such as a Maven groupId, a Docker image owner, a GitHub user or organization.
+     * Returns the name prefix such as a Maven groupId, a Docker image owner, a
+     * GitHub user or organization.
      *
      * @return the namespace
      */
@@ -296,7 +315,8 @@ public final class PackageURL implements Serializable {
     }
 
     /**
-     * Returns extra qualifying data for a package such as an OS, architecture, a distro, etc.
+     * Returns extra qualifying data for a package such as an OS, architecture, a
+     * distro, etc.
      * This method returns an UnmodifiableMap.
      *
      * @return all the qualifiers, or an empty map if none are set
@@ -395,13 +415,13 @@ public final class PackageURL implements Serializable {
     }
 
     private static String validateName(final String type, final String value)
-        throws MalformedPackageURLException {
+            throws MalformedPackageURLException {
 
-    if (value.isEmpty()) {
-        throw new MalformedPackageURLException("The PackageURL name specified is invalid");
-    }
+        if (value.isEmpty()) {
+            throw new MalformedPackageURLException("The PackageURL name specified is invalid");
+        }
 
-    return PackageNamePolicies.forType(type).normalize(value);
+        return PackageNamePolicies.forType(type).normalize(value);
     }
 
     private static @Nullable String validateVersion(final String type, final @Nullable String value) {
@@ -541,8 +561,10 @@ public final class PackageURL implements Serializable {
     }
 
     /**
-     * Some purl types may have specific constraints. This method attempts to verify them.
-     * @param type the purl type
+     * Some purl types may have specific constraints. This method attempts to verify
+     * them.
+     *
+     * @param type      the purl type
      * @param namespace the purl namespace
      * @throws MalformedPackageURLException if constraints are not met
      */
@@ -556,6 +578,10 @@ public final class PackageURL implements Serializable {
         }
     }
 
+    private static String canonicalizeQualifierKey(final String key) {
+        return StringUtil.toLowerCase(key);
+    }
+
     private static @Nullable Map<String, String> parseQualifiers(final @Nullable Map<String, String> qualifiers)
             throws MalformedPackageURLException {
         if (qualifiers == null || qualifiers.isEmpty()) {
@@ -567,7 +593,8 @@ public final class PackageURL implements Serializable {
                     .filter(entry -> !isEmpty(entry.getValue()))
                     .collect(
                             TreeMap::new,
-                            (map, value) -> map.put(StringUtil.toLowerCase(value.getKey()), value.getValue()),
+                            (map, value) -> map.put(
+                                    canonicalizeQualifierKey(value.getKey()), value.getValue()),
                             TreeMap::putAll);
             return validateQualifiers(results);
         } catch (ValidationException ex) {
@@ -585,7 +612,7 @@ public final class PackageURL implements Serializable {
                             (map, value) -> {
                                 final String[] entry = value.split("=", 2);
                                 if (entry.length == 2 && !entry[1].isEmpty()) {
-                                    String key = StringUtil.toLowerCase(entry[0]);
+                                    String key = canonicalizeQualifierKey(entry[0]);
                                     if (map.put(key, StringUtil.percentDecode(entry[1])) != null) {
                                         throw new ValidationException(
                                                 "Duplicate package qualifier encountered. More then one value was specified for "
@@ -612,13 +639,18 @@ public final class PackageURL implements Serializable {
     }
 
     /**
-     * Evaluates if the specified Package URL has the same values up to, but excluding
+     * Evaluates if the specified Package URL has the same values up to, but
+     * excluding
      * the qualifier (querystring).
-     * This includes equivalence of the scheme, type, namespace, name, and version, but excludes qualifier and subpath
+     * This includes equivalence of the scheme, type, namespace, name, and version,
+     * but excludes qualifier and subpath
      * from evaluation.
      *
-     * @deprecated This method is no longer recommended and will be removed from a future release.
-     * <p> Use {@link PackageURL#isCoordinatesEquals} instead.</p>
+     * @deprecated This method is no longer recommended and will be removed from a
+     *             future release.
+     *             <p>
+     *             Use {@link PackageURL#isCoordinatesEquals} instead.
+     *             </p>
      *
      * @param purl the Package URL to evaluate
      * @return true if equivalence passes, false if not
@@ -631,9 +663,11 @@ public final class PackageURL implements Serializable {
     }
 
     /**
-     * Evaluates if the specified Package URL has the same values up to, but excluding
+     * Evaluates if the specified Package URL has the same values up to, but
+     * excluding
      * the qualifier (querystring).
-     * This includes equivalence of the scheme, type, namespace, name, and version, but excludes qualifier and subpath
+     * This includes equivalence of the scheme, type, namespace, name, and version,
+     * but excludes qualifier and subpath
      * from evaluation.
      *
      * @param purl the Package URL to evaluate, not {@code null}
@@ -648,9 +682,12 @@ public final class PackageURL implements Serializable {
     }
 
     /**
-     * Returns only the canonicalized coordinates of the Package URL which includes the type, namespace, name,
+     * Returns only the canonicalized coordinates of the Package URL which includes
+     * the type, namespace, name,
      * and version, and which omits the qualifier and subpath.
-     * @return A canonicalized PackageURL String excluding the qualifier and subpath.
+     *
+     * @return A canonicalized PackageURL String excluding the qualifier and
+     *         subpath.
      * @since 1.4.0
      */
     public String getCoordinates() {
@@ -658,9 +695,12 @@ public final class PackageURL implements Serializable {
     }
 
     /**
-     * Evaluates if the specified Package URL has the same canonical value. This method
-     * canonicalizes the Package URLs being evaluated and performs an equivalence on the
-     * canonical values. Canonical equivalence is especially useful for qualifiers, which
+     * Evaluates if the specified Package URL has the same canonical value. This
+     * method
+     * canonicalizes the Package URLs being evaluated and performs an equivalence on
+     * the
+     * canonical values. Canonical equivalence is especially useful for qualifiers,
+     * which
      * can be in any order, but have a predictable order in canonicalized form.
      *
      * @param purl the Package URL to evaluate, not {@code null}
@@ -677,8 +717,10 @@ public final class PackageURL implements Serializable {
 
     @Override
     public boolean equals(@Nullable Object o) {
-        if (this == o) return true;
-        if (o == null || getClass() != o.getClass()) return false;
+        if (this == o)
+            return true;
+        if (o == null || getClass() != o.getClass())
+            return false;
         final PackageURL other = (PackageURL) o;
         return type.equals(other.type)
                 && Objects.equals(namespace, other.namespace)
@@ -770,11 +812,12 @@ public final class PackageURL implements Serializable {
          */
         public static final String DOCKER = "docker";
         /**
-         *  RubyGems.
+         * RubyGems.
          */
         public static final String GEM = "gem";
         /**
-         * Plain, generic packages that do not fit anywhere else, such as for "upstream-from-distro" packages.
+         * Plain, generic packages that do not fit anywhere else, such as for
+         * "upstream-from-distro" packages.
          */
         public static final String GENERIC = "generic";
         /**
@@ -818,7 +861,7 @@ public final class PackageURL implements Serializable {
          */
         public static final String MLFLOW = "mlflow";
         /**
-         *  Nixos packages
+         * Nixos packages
          *
          * @since 2.0.0
          */
@@ -833,7 +876,8 @@ public final class PackageURL implements Serializable {
         public static final String NUGET = "nuget";
         /**
          * All artifacts stored in registries that conform to the
-         * <a href="https://github.com/opencontainers/distribution-spec">OCI Distribution Specification</a>, including
+         * <a href="https://github.com/opencontainers/distribution-spec">OCI
+         * Distribution Specification</a>, including
          * container images built by Docker and others.
          *
          * @since 2.0.0
@@ -887,6 +931,7 @@ public final class PackageURL implements Serializable {
         @Deprecated
         public static final String NIXPKGS = "nix";
 
-        private StandardTypes() {}
+        private StandardTypes() {
+        }
     }
 }
